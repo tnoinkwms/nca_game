@@ -187,6 +187,10 @@ class Player():
             else:
                 Ballet(self.x+4, self.y)
                 pyxel.play(3, 10)
+        if pyxel.btnp(pyxel.KEY_G):
+            Ballet(self.x+2, self.y)
+            Ballet(self.x+6, self.y)
+            pyxel.play(3, 10)
         
         if self.x >= X_SIZE-15:
             self.x =X_SIZE-15
