@@ -362,10 +362,14 @@ class App():
     
     def draw_title_scene(self):
         pyxel.cls(0)
-        pyxel.text(38, 40, "START GAME", 7)
-        pyxel.text(30, 60, "PRESS ENTER KEY", 7)
+        pyxel.text(38, 30, "START GAME", 7)
+        pyxel.text(30, 45, "PRESS ENTER KEY", pyxel.frame_count % 16)
         #pyxel.blt(42,95,0,0,8,8,8,0)
-        pyxel.blt(75,75,0, 5,40, 21,39,0)
+        pyxel.blt(94,75,0, 5,40, 21,39,0)
+        pyxel.text(40,80,"CREATED BY", 7)
+        pyxel.text(28,90, "TAKAHIDE YOSHIDA",7)
+        pyxel.text(38,100, "HIROKI SATO",7)
+
         #pyxel.text(52, 97, "ver.1", 11)
         #pyxel.blt(55,80,0,8,0,8,8,0)
         #pyxel.pal(15, pyxel.frame_count % 16)
