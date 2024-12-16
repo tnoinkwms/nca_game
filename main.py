@@ -10,6 +10,7 @@ SCENE_TITLE = 0
 SCENE_PLAY = 1
 SCENE_GAMEOVER = 2
 SCENE_CLEAR = 3
+SCENE_TUTORIAL = 4
 
 bullets = []
 enemy_seeds = []
@@ -257,6 +258,8 @@ class App():
             self.update_gameover_scene()
         elif self.scene == SCENE_CLEAR:
             self.update_clear_scene()
+        elif self.scene == SCENE_TUTORIAL:
+            self.update_tutorial_scene()
     
     def draw(self):
         pyxel.cls(7)
@@ -268,8 +271,15 @@ class App():
             self.draw_gameover_scene()
         elif self.scene == SCENE_CLEAR:
             self.draw_clear_scene()
+        elif self.scene == SCENE_TUTORIAL:
+            self.draw_tutorial_scene()
     
     def update_title_scene(self):
+        if pyxel.btnp(pyxel.KEY_RETURN):
+            self.scene = SCENE_TUTORIAL
+            pyxel.pal()
+    
+    def update_tutorial_scene(self):
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.scene = SCENE_PLAY
             pyxel.playm(0, loop=True)
@@ -365,7 +375,7 @@ class App():
         pyxel.text(38, 30, "START GAME", 7)
         pyxel.text(30, 45, "PRESS ENTER KEY", pyxel.frame_count % 16)
         #pyxel.blt(42,95,0,0,8,8,8,0)
-        pyxel.blt(94,75,0, 5,40, 21,39,0)
+        #pyxel.blt(94,75,0, 5,40, 21,39,0)
         pyxel.text(40,80,"CREATED BY", 7)
         pyxel.text(28,90, "TAKAHIDE YOSHIDA",7)
         pyxel.text(38,100, "HIROKI SATO",7)
@@ -381,6 +391,23 @@ class App():
         #pyxel.text(70, 110,"loser", 0)
         pyxel.text(47, 40, "LOSER!!", 0)
         pyxel.text(30, 60, "PRESS ENTER KEY", pyxel.frame_count % 16)
+    
+    def draw_tutorial_scene(self):
+        pyxel.cls(0)
+        pyxel.blt(20, 10, 0, 16,89, 15, 15, 0)
+        pyxel.text(50, 15, "WASD or ARROW",7)
+
+        pyxel.blt(23, 34, 0, 32,96, 8, 8, 0)
+        pyxel.text(50, 35, "SPACE",7)
+
+        pyxel.blt(20, 50, 0, 0,24, 16,16,0)
+        pyxel.text(50, 55, "THIS IS YOU",7)
+
+        pyxel.blt(20,72,0,16,104, 14, 19, 0)
+        pyxel.text(50, 79, "YOUR ENEMY",7)
+
+        pyxel.blt(23,100,0,32,104, 8, 8, 0)
+        pyxel.text(50, 100, "FILTHY SLIME",7)
 
     def draw_clear_scene(self):
         for i in range(2):
