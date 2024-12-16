@@ -36,7 +36,7 @@ def draw_entities(entities):
 def closest_color_index(r, g, b,type):
     min_dist = float('inf')
     best_idx = 0
-    if type == "researd":
+    if type == "lizard":
         c_list = pyxel.colors.to_list()[:]
     else:
         c_list = pyxel.colors.to_list()[:]
@@ -53,7 +53,7 @@ def closest_color_index(r, g, b,type):
             best_idx = i
     return best_idx
 
-def draw_nca(researd, grayscott):
+def draw_nca(lizard, grayscott):
     for row in range(72):
         for col in range(72):
             # Draw grayscott (using scaled coordinates)
@@ -63,9 +63,9 @@ def draw_nca(researd, grayscott):
                 #if c !=7:
                 pyxel.rect(col*2, row*2,2,2, c)
 
-            # Draw researd
-            r, g, b = [int(val*255) for val in researd[row, col, 1:4]]
-            c = closest_color_index(r,g,b,  "researd")
+            # Draw lizard
+            r, g, b = [int(val*255) for val in lizard[row, col, 1:4]]
+            c = closest_color_index(r,g,b,  "lizard")
             if c !=10:
                 pyxel.pset(col+x, row+y, c)
         
@@ -243,7 +243,7 @@ class App():
         pyxel.load("./resource/my_resource.pyxres")
         self.player = Player(60,100,1)
         self.level = 1
-        self.gnca = GNCA(position_x = x, position_y = y, model_path="./resource/researd.onnx")
+        self.gnca = GNCA(position_x = x, position_y = y, model_path="./resource/lizard.onnx")
         self.gs = GS(position_x = 0, position_y = 0, model_path="./resource/gray_scott.onnx")
         load_bgm(0, "./resource/music.json", 0, 1, 2)
         self.scene = SCENE_TITLE
@@ -347,7 +347,7 @@ class App():
             gncas.clear()
             self.level = 1
             self.player = Player(60,100, self.level)
-            self.gnca = GNCA(position_x = x, position_y = y, model_path="./resource/researd.onnx")
+            self.gnca = GNCA(position_x = x, position_y = y, model_path="./resource/lizard.onnx")
             self.gs = GS(position_x = 0, position_y = 0, model_path="./resource/gray_scott.onnx")
             pyxel.playm(0, loop=True)
 
@@ -419,9 +419,9 @@ class App():
         pyxel.text(30, 60, "PRESS ENTER KEY", pyxel.frame_count % 16)
 
     def draw_play_scene(self):
-        researd = self.gnca.draw()
+        lizard = self.gnca.draw()
         grayscott = self.gs.draw()
-        draw_nca(researd, grayscott)
+        draw_nca(lizard, grayscott)
         draw_entities(bullets)
         draw_entities(enemy_seeds)
         self.player.draw()
