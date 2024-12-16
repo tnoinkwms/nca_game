@@ -375,7 +375,11 @@ class App():
         #pyxel.pal(15, pyxel.frame_count % 16)
 
     def draw_gameover_scene(self):
-        pyxel.text(40, 40, "GAME OVER", 0)
+        pyxel.blt(10+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%2),96,8,8, 0)
+        pyxel.blt(30+pyxel.frame_count%60, 110,0,0,88,10,3,7)
+        pyxel.blt(30+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%5),80,8,8, 0)
+        #pyxel.text(70, 110,"loser", 0)
+        pyxel.text(47, 40, "LOSER!!", 0)
         pyxel.text(30, 60, "PRESS ENTER KEY", pyxel.frame_count % 16)
 
     def draw_clear_scene(self):
