@@ -172,13 +172,13 @@ class Player():
         self.y = y
         self.life = MAX_LIFE
     def update(self):
-        if pyxel.btn(pyxel.KEY_LEFT):
+        if pyxel.btn(pyxel.KEY_LEFT) or pyxel.btn(pyxel.KEY_A):
             self.x -= 3
-        elif pyxel.btn(pyxel.KEY_RIGHT):
+        elif pyxel.btn(pyxel.KEY_RIGHT) or pyxel.btn(pyxel.KEY_D):
             self.x += 3
-        elif pyxel.btn(pyxel.KEY_UP):
+        elif pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.KEY_W):
             self.y -= 3
-        elif pyxel.btn(pyxel.KEY_DOWN):
+        elif pyxel.btn(pyxel.KEY_DOWN) or pyxel.btn(pyxel.KEY_S):
             self.y += 3
         if pyxel.btnp(pyxel.KEY_SPACE):
             if self.level == 1:
