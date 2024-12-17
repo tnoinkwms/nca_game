@@ -16,7 +16,7 @@ bullets = []
 enemy_seeds = []
 gncas = []
 BULLET_SPEED = 3
-MAX_LIFE = 2000
+MAX_LIFE = 200
 x = 24
 y = 6
 
@@ -36,10 +36,10 @@ def draw_entities(entities):
 def closest_color_index(r, g, b,type):
     min_dist = float('inf')
     best_idx = 0
-    if type == "lizard":
+    if type == "lizard" or type =="title":
         c_list = pyxel.colors.to_list()[:]
     else:
-        c_list = pyxel.colors.to_list()[:]
+        c_list = pyxel.colors.to_list()[:4]
     for i, color_val in enumerate(c_list):
         pr = (color_val >> 16) & 0xFF
         pg = (color_val >> 8) & 0xFF
@@ -60,8 +60,8 @@ def draw_nca(lizard, grayscott):
             if row < 60 and col < 60:
                 r,g,b = [int(val*255) for val in grayscott[row, col, 0:3]]
                 c = closest_color_index(r,g,b, "grayscott")
-                #if c !=7:
-                pyxel.rect(col*2, row*2,2,2, c)
+                if c !=3:
+                    pyxel.rect(col*2, row*2,2,2, c)
 
             # Draw lizard
             r, g, b = [int(val*255) for val in lizard[row, col, 1:4]]
@@ -181,7 +181,7 @@ class Ballet():
         self.w = 8
         self.h = 8
         self.damage_count = 0
-        self.damage_threshold = 200
+        self.damage_threshold = 210
         self.is_alive = True
         bullets.append(self)
     def update(self):
@@ -214,6 +214,7 @@ class App():
         self.player = Player(60,100,1)
         self.level = 1
         self.hidden_key = 0
+        self.th = 0.9
         self.gnca = GNCA(position_x = x, position_y = y,height=72, width=72, model_path="./resource/lizard.onnx", agent_type="enemy")
         self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path="./resource/gray_scott.onnx", agent_type = "env")
         self.title = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path="./resource/logo.onnx",agent_type = "enemy")
@@ -285,7 +286,7 @@ class App():
                 self.gs.input[0, seed.y//2-2:seed.y//2+2,seed.x//2 -2:seed.x//2+2, 3] = 1
         
         player_region = self.gs.input[0,self.player.y//2:(self.player.y+8)//2,self.player.x//2:(self.player.x+8)//2,3]
-        life_count = np.count_nonzero(player_region)
+        life_count = np.count_nonzero(player_region >= self.th)
         self.player.life -= life_count
 
         enemy_region = self.gnca.input[0,:,:,3]
@@ -337,6 +338,7 @@ class App():
             bullets.clear()
             gncas.clear()
             self.level +=1
+            self.th -= 0.35
             self.player = Player(60,100, self.level)
             if self.level > 1:
                 enemy = "./resource/spider.onnx"
@@ -408,7 +410,7 @@ class App():
         self.player.draw()
         pyxel.text(3, 3, f"LIFE", 8)
         pyxel.text(90, 3, f"STAGE {self.level}", 0)
-        pyxel.rect(22,3, MAX_LIFE//70, 5, 10)
-        pyxel.rect(22,3, self.player.life//70, 5, 11)
+        pyxel.rect(22,3, MAX_LIFE//10, 5, 10)
+        pyxel.rect(22,3, self.player.life//10, 5, 11)
         
 App()
