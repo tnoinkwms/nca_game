@@ -213,6 +213,7 @@ class App():
         pyxel.load("./resource/my_resource.pyxres")
         self.player = Player(60,100,1)
         self.level = 1
+        self.hidden_key = 0
         self.gnca = GNCA(position_x = x, position_y = y,height=72, width=72, model_path="./resource/lizard.onnx", agent_type="enemy")
         self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path="./resource/gray_scott.onnx", agent_type = "env")
         self.title = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path="./resource/logo.onnx",agent_type = "enemy")
@@ -247,6 +248,8 @@ class App():
     
     def update_title_scene(self):
         self.title.update()
+        if pyxel.btnp(pyxel.KEY_SPACE):
+            self.hidden_key = 1
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.scene = SCENE_TUTORIAL
             gncas.clear()
@@ -346,6 +349,8 @@ class App():
         title = self.title.draw()
         draw_title(title)
         pyxel.text(30, 100, "PRESS ENTER KEY", pyxel.frame_count % 16)
+        if self.hidden_key == 1:
+            self.title.input[0, pyxel.mouse_y//2-2:pyxel.mouse_y//2+2,pyxel.mouse_x//2-2:pyxel.mouse_x//2+2, :] = 1
         #pyxel.text(40,80,"CREATED BY", 7)
         #pyxel.text(28,90, "TAKAHIDE YOSHIDA",7)
         #pyxel.text(38,100, "HIROKI SATO",7)
@@ -361,9 +366,9 @@ class App():
         #pyxel.pal(15, pyxel.frame_count % 16)"""
 
     def draw_gameover_scene(self):
-        pyxel.blt(10+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%2),96,8,8, 0)
-        pyxel.blt(30+pyxel.frame_count%60, 110,0,0,88,10,3,7)
-        pyxel.blt(30+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%5),80,8,8, 0)
+        #pyxel.blt(10+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%2),96,8,8, 0)
+        #pyxel.blt(30+pyxel.frame_count%60, 110,0,0,88,10,3,7)
+        #pyxel.blt(30+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%5),80,8,8, 0)
         #pyxel.text(70, 110,"loser", 0)
         pyxel.text(47, 40, "LOSER!!", 0)
         pyxel.text(30, 60, "PRESS ENTER KEY", pyxel.frame_count % 16)
