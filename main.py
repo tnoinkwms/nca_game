@@ -68,6 +68,14 @@ def draw_nca(lizard, grayscott):
             c = closest_color_index(r,g,b,  "lizard")
             if c !=10:
                 pyxel.pset(col+x, row+y, c)
+
+def draw_title(title):
+    for row in range(60):
+        for col in range(60):
+            r,g,b = [int(val*255) for val in title[row, col, 0:3]]
+            c = closest_color_index(r,g,b, "title")
+            #if c !=7:
+            pyxel.rect(col*2, row*2,2,2, c)
         
 
 def load_bgm(msc, filename, snd1, snd2, snd3):
@@ -82,50 +90,8 @@ def load_bgm(msc, filename, snd1, snd2, snd3):
         pyxel.sounds[snd3].set(*bgm[2])
         pyxel.musics[msc].set([snd1], [snd2], [snd3])
 
-class GS():
-    def __init__(self,position_x, position_y,model_path, height=60, width=60, n_channels=16):
-        self.height: int = height
-        self.width: int = width
-        self.x = position_x
-        self.y = position_y
-        self.n_channels: int = n_channels
-        self.session = onnxruntime.InferenceSession(model_path)
-        self.input: np.ndarray
-        self.output: np.ndarray
-        self.input_name = self.session.get_inputs()[0].name
-        self.output_name = self.session.get_outputs()[0].name
-        self.initialize()
-        gncas.append(self)
-    def to_alpha(self, x):
-        return np.clip(x[..., 3:4], 0, 0.9999)
-
-    def to_rgba(self, x):
-        rgb, a = x[..., :3], self.to_alpha(x)
-        return np.concatenate((np.clip(1.0 - a + rgb, 0, 0.9999), a), axis=3)
-
-    def write_alpha_tolist(self, x):
-        alpha = self.to_alpha(x).tolist()
-        return alpha
-
-    def initialize(self):
-        x = np.zeros([1, self.height, self.width, self.n_channels], np.float32)
-        #x[:, self.height // 2 - 1:self.height // 2 + 1, self.width // 2 - 1:self.width // 2 + 1, 3:] = 1.0
-        self.input = x
-        return x
-    
-    def run(self) -> np.ndarray:
-        out = self.session.run([self.output_name], {self.input_name: self.input})
-        self.output = out[0].astype(np.float32)
-        self.input = out[0].astype(np.float32)
-        return self.input
-    
-    def update(self):
-        self.run()
-    def draw(self):
-        return self.to_rgba(self.input)[0]
-
 class GNCA():
-    def __init__(self,position_x, position_y, model_path, height=72, width=72, n_channels=16):
+    def __init__(self,position_x, position_y, model_path, height=72, width=72, n_channels=16, agent_type = "enemy"):
         self.height: int = height
         self.width: int = width
         self.x = position_x
@@ -136,6 +102,7 @@ class GNCA():
         self.output: np.ndarray
         self.input_name = self.session.get_inputs()[0].name
         self.output_name = self.session.get_outputs()[0].name
+        self.agent_type = agent_type
         self.make_seeds()
         gncas.append(self)
     def to_alpha(self, x):
@@ -151,7 +118,10 @@ class GNCA():
 
     def make_seeds(self):
         x = np.zeros([1, self.height, self.width, self.n_channels], np.float32)
-        x[:, self.height // 2 - 1:self.height // 2 + 1, self.width // 2 - 1:self.width // 2 + 1, 3:] = 1.0
+        if self.agent_type == "enemy":
+            x[:, self.height // 2 - 1:self.height // 2 + 1, self.width // 2 - 1:self.width // 2 + 1, 3:] = 1.0
+        elif self.agent_type == "env":
+            pass
         self.input = x
         return x
     
@@ -243,8 +213,9 @@ class App():
         pyxel.load("./resource/my_resource.pyxres")
         self.player = Player(60,100,1)
         self.level = 1
-        self.gnca = GNCA(position_x = x, position_y = y, model_path="./resource/lizard.onnx")
-        self.gs = GS(position_x = 0, position_y = 0, model_path="./resource/gray_scott.onnx")
+        self.gnca = GNCA(position_x = x, position_y = y,height=72, width=72, model_path="./resource/lizard.onnx", agent_type="enemy")
+        self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path="./resource/gray_scott.onnx", agent_type = "env")
+        self.title = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path="./resource/logo.onnx",agent_type = "enemy")
         load_bgm(0, "./resource/music.json", 0, 1, 2)
         self.scene = SCENE_TITLE
         pyxel.run(self.update,self.draw)
@@ -275,9 +246,10 @@ class App():
             self.draw_tutorial_scene()
     
     def update_title_scene(self):
+        self.title.update()
         if pyxel.btnp(pyxel.KEY_RETURN):
             self.scene = SCENE_TUTORIAL
-            pyxel.pal()
+            gncas.clear()
     
     def update_tutorial_scene(self):
         if pyxel.btnp(pyxel.KEY_RETURN):
@@ -347,8 +319,8 @@ class App():
             gncas.clear()
             self.level = 1
             self.player = Player(60,100, self.level)
-            self.gnca = GNCA(position_x = x, position_y = y, model_path="./resource/lizard.onnx")
-            self.gs = GS(position_x = 0, position_y = 0, model_path="./resource/gray_scott.onnx")
+            self.gnca = GNCA(position_x = x, position_y = y, height=72, width=72,  model_path="./resource/lizard.onnx", agent_type = "enemy")
+            self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60,  model_path="./resource/gray_scott.onnx", agent_type = "env")
             pyxel.playm(0, loop=True)
 
     def update_clear_scene(self):
@@ -366,23 +338,27 @@ class App():
             if self.level > 1:
                 enemy = "./resource/spider.onnx"
                 env = "./resource/spider-web.onnx"
-            self.gnca = GNCA(position_x = x, position_y = y, model_path=enemy)
-            self.gs = GS(position_x = 0, position_y = 0, model_path=env)
+            self.gnca = GNCA(position_x = x, position_y = y,height=72, width=72, model_path=enemy, agent_type = "enemy")
+            self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path=env, agent_type = "env")
             pyxel.playm(0, loop=True)
     
     def draw_title_scene(self):
-        pyxel.cls(0)
+        title = self.title.draw()
+        draw_title(title)
+        pyxel.text(30, 100, "PRESS ENTER KEY", pyxel.frame_count % 16)
+        #pyxel.text(40,80,"CREATED BY", 7)
+        #pyxel.text(28,90, "TAKAHIDE YOSHIDA",7)
+        #pyxel.text(38,100, "HIROKI SATO",7)
+
+        """
         pyxel.text(38, 30, "START GAME", 7)
         pyxel.text(30, 45, "PRESS ENTER KEY", pyxel.frame_count % 16)
         #pyxel.blt(42,95,0,0,8,8,8,0)
         #pyxel.blt(94,75,0, 5,40, 21,39,0)
-        pyxel.text(40,80,"CREATED BY", 7)
-        pyxel.text(28,90, "TAKAHIDE YOSHIDA",7)
-        pyxel.text(38,100, "HIROKI SATO",7)
 
         #pyxel.text(52, 97, "ver.1", 11)
         #pyxel.blt(55,80,0,8,0,8,8,0)
-        #pyxel.pal(15, pyxel.frame_count % 16)
+        #pyxel.pal(15, pyxel.frame_count % 16)"""
 
     def draw_gameover_scene(self):
         pyxel.blt(10+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%2),96,8,8, 0)
@@ -403,7 +379,7 @@ class App():
         pyxel.blt(20, 50, 0, 0,24, 16,16,0)
         pyxel.text(50, 55, "THIS IS YOU",7)
 
-        pyxel.blt(20,72,0,16,104, 14, 19, 0)
+        pyxel.blt(20,75,0,16,104, 14, 19, 0)
         pyxel.text(50, 79, "YOUR ENEMY",7)
 
         pyxel.blt(23,100,0,32,104, 8, 8, 0)
