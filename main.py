@@ -410,7 +410,7 @@ class App():
         self.player.draw()
         pyxel.text(3, 3, f"LIFE", 8)
         pyxel.text(90, 3, f"STAGE {self.level}", 0)
-        pyxel.rect(22,3, MAX_LIFE//10, 5, 10)
-        pyxel.rect(22,3, self.player.life//10, 5, 11)
+        pyxel.rect(22,3, MAX_LIFE/8, 5, 10)
+        pyxel.rect(22,3, self.player.life//8, 5, 11)
         
 App()
