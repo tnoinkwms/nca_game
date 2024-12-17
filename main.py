@@ -16,7 +16,7 @@ bullets = []
 enemy_seeds = []
 gncas = []
 BULLET_SPEED = 3
-MAX_LIFE = 200
+MAX_LIFE = 250
 x = 24
 y = 6
 
@@ -368,11 +368,12 @@ class App():
         #pyxel.pal(15, pyxel.frame_count % 16)"""
 
     def draw_gameover_scene(self):
+        pyxel.cls(0)
         #pyxel.blt(10+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%2),96,8,8, 0)
         #pyxel.blt(30+pyxel.frame_count%60, 110,0,0,88,10,3,7)
         #pyxel.blt(30+pyxel.frame_count%60, 100,0,8*(pyxel.frame_count%5),80,8,8, 0)
         #pyxel.text(70, 110,"loser", 0)
-        pyxel.text(47, 40, "LOSER!!", 0)
+        pyxel.text(43, 40, "YOU DIED", 7)
         pyxel.text(30, 60, "PRESS ENTER KEY", pyxel.frame_count % 16)
     
     def draw_tutorial_scene(self):
@@ -410,7 +411,7 @@ class App():
         self.player.draw()
         pyxel.text(3, 3, f"LIFE", 8)
         pyxel.text(90, 3, f"STAGE {self.level}", 0)
-        pyxel.rect(22,3, MAX_LIFE/8, 5, 10)
-        pyxel.rect(22,3, self.player.life//8, 5, 11)
+        pyxel.rect(22,3, MAX_LIFE/9, 5, 10)
+        pyxel.rect(22,3, self.player.life//9, 5, 11)
         
 App()

@@ -1,6 +1,5 @@
 # nca_game
-
-![Game Screenshot](scr.png)
+<img src="scr.png" alt="Game Screenshot" width="400">
 
 # Requirements
 - pyxel 
