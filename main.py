@@ -16,7 +16,7 @@ bullets = []
 enemy_seeds = []
 gncas = []
 BULLET_SPEED = 3
-MAX_LIFE = 250
+MAX_LIFE = 300
 x = 24
 y = 6
 
@@ -104,7 +104,7 @@ class GNCA():
         self.output_name = self.session.get_outputs()[0].name
         self.agent_type = agent_type
         self.make_seeds()
-        gncas.append(self)
+        #gncas.append(self)
     def to_alpha(self, x):
         return np.clip(x[..., 3:4], 0, 0.9999)
 
@@ -322,6 +322,7 @@ class App():
             bullets.clear()
             gncas.clear()
             self.level = 1
+            self.th == 0.9
             self.player = Player(60,100, self.level)
             self.gnca = GNCA(position_x = x, position_y = y, height=72, width=72,  model_path="./resource/lizard.onnx", agent_type = "enemy")
             self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60,  model_path="./resource/gray_scott.onnx", agent_type = "env")
@@ -338,10 +339,13 @@ class App():
             bullets.clear()
             gncas.clear()
             self.level +=1
-            self.th -= 0.35
+            self.th = 0.75
             self.player = Player(60,100, self.level)
-            if self.level > 1:
+            if self.level == 2:
                 enemy = "./resource/spider.onnx"
+                env = "./resource/spider-web.onnx"
+            if self.level >= 3:
+                enemy = "./resource/chibirobo.onnx"
                 env = "./resource/spider-web.onnx"
             self.gnca = GNCA(position_x = x, position_y = y,height=72, width=72, model_path=enemy, agent_type = "enemy")
             self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path=env, agent_type = "env")
@@ -351,21 +355,12 @@ class App():
         title = self.title.draw()
         draw_title(title)
         pyxel.text(30, 100, "PRESS ENTER KEY", pyxel.frame_count % 16)
+        #self.title.input[0, pyxel.mouse_y//2-2:pyxel.mouse_y//2+2,pyxel.mouse_x//2-2:pyxel.mouse_x//2+2, :] = 1
         if self.hidden_key == 1:
             self.title.input[0, pyxel.mouse_y//2-2:pyxel.mouse_y//2+2,pyxel.mouse_x//2-2:pyxel.mouse_x//2+2, :] = 1
         #pyxel.text(40,80,"CREATED BY", 7)
         #pyxel.text(28,90, "TAKAHIDE YOSHIDA",7)
         #pyxel.text(38,100, "HIROKI SATO",7)
-
-        """
-        pyxel.text(38, 30, "START GAME", 7)
-        pyxel.text(30, 45, "PRESS ENTER KEY", pyxel.frame_count % 16)
-        #pyxel.blt(42,95,0,0,8,8,8,0)
-        #pyxel.blt(94,75,0, 5,40, 21,39,0)
-
-        #pyxel.text(52, 97, "ver.1", 11)
-        #pyxel.blt(55,80,0,8,0,8,8,0)
-        #pyxel.pal(15, pyxel.frame_count % 16)"""
 
     def draw_gameover_scene(self):
         pyxel.cls(0)
@@ -411,7 +406,7 @@ class App():
         self.player.draw()
         pyxel.text(3, 3, f"LIFE", 8)
         pyxel.text(90, 3, f"STAGE {self.level}", 0)
-        pyxel.rect(22,3, MAX_LIFE/9, 5, 10)
-        pyxel.rect(22,3, self.player.life//9, 5, 11)
+        pyxel.rect(22,3, MAX_LIFE/10, 5, 10)
+        pyxel.rect(22,3, self.player.life//10, 5, 11)
         
 App()
