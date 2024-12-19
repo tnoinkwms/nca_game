@@ -211,7 +211,7 @@ class App():
     def __init__(self):
         pyxel.init(X_SIZE,Y_SIZE)
         pyxel.load("./resource/my_resource.pyxres")
-        self.player = Player(60,100,1)
+        self.player = Player(55,100,1)
         self.level = 1
         self.hidden_key = 0
         self.th = 0.9
@@ -323,7 +323,7 @@ class App():
             gncas.clear()
             self.level = 1
             self.th == 0.9
-            self.player = Player(60,100, self.level)
+            self.player = Player(55,100, self.level)
             self.gnca = GNCA(position_x = x, position_y = y, height=72, width=72,  model_path="./resource/lizard.onnx", agent_type = "enemy")
             self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60,  model_path="./resource/gray_scott.onnx", agent_type = "env")
             pyxel.playm(0, loop=True)
@@ -339,13 +339,12 @@ class App():
             bullets.clear()
             gncas.clear()
             self.level +=1
-            self.th = 0.75
-            self.player = Player(60,100, self.level)
-            if self.level == 2:
+            self.th = 0.6
+            #self.player = Player(60,100, self.level)
+            self.player.x = 55
+            self.player.y = 100
+            if self.level >= 2:
                 enemy = "./resource/spider.onnx"
-                env = "./resource/spider-web.onnx"
-            if self.level >= 3:
-                enemy = "./resource/chibirobo.onnx"
                 env = "./resource/spider-web.onnx"
             self.gnca = GNCA(position_x = x, position_y = y,height=72, width=72, model_path=enemy, agent_type = "enemy")
             self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path=env, agent_type = "env")
