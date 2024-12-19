@@ -218,7 +218,7 @@ class App():
         self.gnca = GNCA(position_x = x, position_y = y,height=72, width=72, model_path="./resource/lizard.onnx", agent_type="enemy")
         self.gs = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path="./resource/gray_scott.onnx", agent_type = "env")
         self.title = GNCA(position_x = 0, position_y = 0,height=60, width=60, model_path="./resource/logo.onnx",agent_type = "enemy")
-        load_bgm(0, "./resource/music.json", 0, 1, 2)
+        load_bgm(0, "./resource/music_2.json", 0, 1, 2)
         self.scene = SCENE_TITLE
         pyxel.run(self.update,self.draw)
 
