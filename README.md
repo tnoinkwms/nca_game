@@ -1,5 +1,6 @@
 # nca_game
 <img src="scr.png" alt="Game Screenshot" width="400">
+Introducing a new invader game: your mission is to obliterate Neural Cellular Automata! These enemies don’t have life bars—they’re trained to regenerate back to their original forms. What does 'life' really mean in this game?
 
 # Requirements
 - pyxel 
@@ -12,5 +13,4 @@
 see https://github.com/kitao/pyxel/blob/main/docs/README.ja.md
 
 ## How to play
-This application can be run using Python. 
 Simply execute the `main.py` file from your terminal:
